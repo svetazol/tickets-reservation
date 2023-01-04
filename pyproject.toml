@@ -10,6 +10,7 @@ packages = [{include = "tickets_reservation"}]
 python = "^3.10"
 django = "^4.1.5"
 djangorestframework = "^3.14.0"
+drf-yasg = "^1.21.4"
 
 
 [tool.poetry.group.dev.dependencies]
