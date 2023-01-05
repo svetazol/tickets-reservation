@@ -38,7 +38,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class ReservedTicketSerializer(serializers.ModelSerializer):
-    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+    reserved_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ReservedTicket

@@ -13,6 +13,7 @@ class UserFactory(DjangoModelFactory):
         model = User
 
     username = factory.Faker("first_name")
+    password = factory.Faker("password")
 
 
 class CategoryFactory(DjangoModelFactory):

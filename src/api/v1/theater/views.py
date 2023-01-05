@@ -75,8 +75,9 @@ class ReservedTicketViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def validate_logic(self, serializer):
-        self._validate_open_reservation(serializer.performance)
-        self._validate_reserved_tickets_amount(serializer.performance, self.request.user)
+        performance = serializer.validated_data["performance"]
+        self._validate_open_reservation(performance)
+        self._validate_reserved_tickets_amount(performance, self.request.user)
 
     def _validate_reserved_tickets_amount(self, performance, user):
         amount = ReservedTicketService.count_performance_reservations(performance, user)
@@ -88,4 +89,4 @@ class ReservedTicketViewSet(ModelViewSet):
             raise ValidationError("Reservation for the performance is not open yet")
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        serializer.save(reserved_by=self.request.user)
