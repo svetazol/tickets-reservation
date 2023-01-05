@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.utils.decorators import method_decorator
+from django.utils.timezone import now
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -15,6 +17,7 @@ from core.theater.serializers import (
     ReservedTicketSerializer,
     TicketSerializer,
 )
+from core.theater.services import ReservedTicketService
 
 
 class PerformanceViewSet(ModelViewSet):
@@ -63,6 +66,26 @@ class ReservedTicketViewSet(ModelViewSet):
     queryset = ReservedTicket.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.validate_logic(serializer)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def validate_logic(self, serializer):
+        self._validate_open_reservation(serializer.performance)
+        self._validate_reserved_tickets_amount(serializer.performance, self.request.user)
+
+    def _validate_reserved_tickets_amount(self, performance, user):
+        amount = ReservedTicketService.count_performance_reservations(performance, user)
+        if amount > settings.MAX_TICKET_RESERVATIONS_PER_PERSON:
+            raise ValidationError("Exceed max tickets reservations")
+
+    def _validate_open_reservation(self, performance):
+        if now() < performance.reservation_start_at:
+            raise ValidationError("Reservation for the performance is not open yet")
+
     def perform_create(self, serializer):
-        serializer.validate_reserved_tickets_amount(self.request.user)
-        serializer.save(reserved_by=self.request.user)
+        serializer.save(created_by=self.request.user)

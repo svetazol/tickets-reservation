@@ -29,7 +29,7 @@ class Ticket(models.Model):
 
 
 class ReservedTicket(models.Model):
-    performance = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="reserved_tickets")
+    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name="reserved_tickets")
     ticket = models.ForeignKey(Ticket, on_delete=models.PROTECT)
     reserved_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reserved_tickets")
     is_paid = models.BooleanField(default=False)
