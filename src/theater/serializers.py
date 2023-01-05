@@ -13,7 +13,12 @@ class CategorySerializer(serializers.ModelSerializer):
 class PerformanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performance
-        fields = "__all__"
+        exclude = ["created_by"]
+
+    def to_representation(self, instance):
+        to_repr = super().to_representation(instance)
+        to_repr["created_by_id"] = instance.created_by_id
+        return to_repr
 
 
 class TicketListSerializer(serializers.ListSerializer):

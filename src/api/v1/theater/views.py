@@ -14,6 +14,9 @@ class PerformanceViewSet(ModelViewSet):
     serializer_class = PerformanceSerializer
     queryset = Performance.objects.all()
 
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
 
 class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
