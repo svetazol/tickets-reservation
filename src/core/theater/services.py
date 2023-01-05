@@ -1,4 +1,4 @@
-from theater.models import ReservedTicket
+from core.theater.models import ReservedTicket
 
 
 class ReservedTicketService:

@@ -2,8 +2,8 @@ from django.conf import settings
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from theater.models import Category, Performance, ReservedTicket, Ticket
-from theater.services import ReservedTicketService
+from core.theater.models import Category, Performance, ReservedTicket, Ticket
+from core.theater.services import ReservedTicketService
 
 
 class CategorySerializer(serializers.ModelSerializer):

@@ -7,9 +7,14 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from theater.models import Category, Performance, ReservedTicket, Ticket
-from theater.permissions import IsOwnerOrReadOnly
-from theater.serializers import CategorySerializer, PerformanceSerializer, ReservedTicketSerializer, TicketSerializer
+from core.theater.models import Category, Performance, ReservedTicket, Ticket
+from core.theater.permissions import IsOwnerOrReadOnly
+from core.theater.serializers import (
+    CategorySerializer,
+    PerformanceSerializer,
+    ReservedTicketSerializer,
+    TicketSerializer,
+)
 
 
 class PerformanceViewSet(ModelViewSet):
