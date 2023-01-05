@@ -1,7 +1,9 @@
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from theater.models import Category, Performance, Ticket
+from theater.models import Category, Performance, ReservedTicket, Ticket
+from theater.services import ReservedTicketService
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -11,14 +13,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PerformanceSerializer(serializers.ModelSerializer):
+    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Performance
-        exclude = ["created_by"]
-
-    def to_representation(self, instance):
-        to_repr = super().to_representation(instance)
-        to_repr["created_by_id"] = instance.created_by_id
-        return to_repr
+        fields = "__all__"
 
 
 class TicketListSerializer(serializers.ListSerializer):
@@ -38,3 +37,16 @@ class TicketSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = "__all__"
         list_serializer_class = TicketListSerializer
+
+
+class ReservedTicketSerializer(serializers.ModelSerializer):
+    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = ReservedTicket
+        fields = "__all__"
+
+    def validate_reserved_tickets_amount(self, user):
+        amount = ReservedTicketService.count_performance_reservations(self.performance, user)
+        if amount > settings.MAX_TICKET_RESERVATIONS_PER_PERSON:
+            raise ValidationError("Exceed max tickets reserv")

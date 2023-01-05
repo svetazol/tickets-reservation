@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path, include
+from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -22,7 +22,7 @@ from rest_framework import permissions
 schema_view = get_schema_view(
     openapi.Info(
         title="Tickets reservation API",
-        default_version='v1',
+        default_version="v1",
         description="Api for creating theater performances and tickets reservations",
     ),
     public=True,
@@ -30,8 +30,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('docs/v1/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path("docs/v1/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("admin/", admin.site.urls),
-    path('api/', include('api.urls')),
-
+    path("api/", include("api.urls")),
+    path("api-auth/", include("rest_framework.urls")),
 ]
