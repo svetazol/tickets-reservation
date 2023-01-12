@@ -18,3 +18,8 @@ python manage.py createsuperuser
 ## Docs
 http://127.0.0.1:8000/docs/v1/
 
+## Docker deployment
+
+```
+docker-compose up
+```

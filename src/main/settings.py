@@ -30,7 +30,7 @@ load_dotenv(os.path.join(BASE_DIR.parent, ".test.env" if TESTING else ".env"))
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@-i9yuu^$jp1a%t-&j$$!j0c8hp^y(ub-f9wu70sm@o)i_h&do"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -139,3 +139,5 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MAX_TICKET_RESERVATIONS_PER_PERSON = os.getenv("MAX_TICKET_RESERVATIONS_PER_PERSON", 10)
+
+REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",)}
